@@ -1,5 +1,4 @@
-*.egg-info/
 *.pyc
+*.sqlite3
 .env
 __pycache__/
-dist/
