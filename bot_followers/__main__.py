@@ -1,7 +1,7 @@
 from time import sleep
 
 import click
-from tweepy.error import RateLimitError
+from tweepy.error import RateLimitError, TweepError
 
 from bot_followers import BotFollowers
 
@@ -25,6 +25,9 @@ def analyze(ctx):
         except RateLimitError:
             click.echo("Due to the Twitter API rate limit, let's take a break…")
             sleep(60 * 5)
+            pass
+        except TweepError as error:
+            click.echo(f"\nRestarting due to an error:\n{error}\n")
             pass
         else:
             break
