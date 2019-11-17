@@ -60,7 +60,7 @@ class Database:
     def error(self, number):
         z_score = 1.96  # 0.95 confidence
         proportion = self.percent(number)
-        return z_score * sqrt(proportion*(1-proportion) / self.count)
+        return z_score * sqrt(proportion * (1 - proportion) / self.count)
 
     def percent(self, number):
         match = self.users.where(User.botometer >= number).count()
@@ -77,8 +77,9 @@ class Database:
 
         for number in (0.5, 0.75, 0.8, 0.9, 0.95):
             label = f"Accounts with +{humanized_percent(number)} in Botometer"
-            data[label] = humanized_percent(self.percent(number), 2)
-            data[label] += f" (±{humanized_percent(self.error(number), 0)})"
+            result = humanized_percent(self.percent(number), 2)
+            error = humanized_percent(self.error(number), 0)
+            data[label] = f"{result} (±{error})"
 
         click.echo(f"\nAnalysis of @{self.target.screen_name}'s followers\n")
         largest = max(len(key) for key in data.keys())
