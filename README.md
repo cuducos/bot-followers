@@ -35,4 +35,4 @@ $ pipenv run python -m bot_followers cuducos analyze
 Contributing
 ------------
 
-Please, format your code with [Black](https://github.com/ambv/black>).
+Please, format your code with [Black](https://github.com/ambv/black).
