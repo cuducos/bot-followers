@@ -5,6 +5,21 @@ from tweepy.error import RateLimitError
 
 from bot_followers import BotFollowers
 
+import traceback
+from os import environ
+from sys import exit
+
+try:
+    environ["TWITTER_CONSUMER_KEY"]
+    environ["TWITTER_CONSUMER_SECRET"]
+    environ["TWITTER_ACCESS_TOKEN_KEY"]
+    environ["TWITTER_ACCESS_TOKEN_SECRET"]
+    environ["BOTOMETER_MASHAPE_KEY"]
+except KeyError:
+    print("Environment variable(s) not found")
+    print("Please set it using .env file or env VAR=VALUE")
+    exit()
+
 
 @click.group()
 @click.argument("account")
