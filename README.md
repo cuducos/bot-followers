@@ -29,7 +29,25 @@ $ python -m bot_followers <account handle> <command>
 Available commands are `analyze` and `report`. For example:
 
 ```bash
-$ pipenv run python -m bot_followers cuducos analyze
+$ pipenv run python -m bot_followers borsalino analyze
+```
+
+After a while, you can check a report (even before `analyze` command has finish its job):
+
+```
+$ run python -m bot_followers borsalino analyze
+
+Analysis of @borsalino's followers
+
+Total followers..................: 5,441,059
+Followers analyzed...............: 4,380
+Percentage analyzed..............: 0.08%
+
+Accounts with +50% in Botometer..: 25.37% (±1.29%)
+Accounts with +75% in Botometer..: 18.56% (±1.15%)
+Accounts with +80% in Botometer..: 13.68% (±1.02%)
+Accounts with +90% in Botometer..: 9.2% (±0.86%)
+Accounts with +95% in Botometer..: 1.16% (±0.32%)
 ```
 
 Contributing
