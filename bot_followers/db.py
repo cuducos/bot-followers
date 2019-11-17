@@ -1,6 +1,5 @@
 from math import sqrt
 from pathlib import Path
-from statistics import stdev
 
 import click
 from peewee import CharField, FloatField, Model, SqliteDatabase
@@ -58,11 +57,10 @@ class Database:
         self._count = self.users.count()
         return self._count
 
-    @property
-    def error(self):
+    def error(self, number):
         z_score = 1.96  # 0.95 confidence
-        sample = (u.botometer for u in self.users if isinstance(u.botometer, float))
-        return z_score * (stdev(sample) / sqrt(self.count))
+        proportion = self.percent(number)
+        return z_score * sqrt(proportion*(1-proportion) / self.count)
 
     def percent(self, number):
         match = self.users.where(User.botometer >= number).count()
@@ -75,12 +73,12 @@ class Database:
             "Percentage analyzed": humanized_percent(
                 self.count / self.target.followers_count, 2
             ),
-            "Margin of error (95% confidence)": f"{self.error:.4f}\n",
         }
 
         for number in (0.5, 0.75, 0.8, 0.9, 0.95):
             label = f"Accounts with +{humanized_percent(number)} in Botometer"
             data[label] = humanized_percent(self.percent(number), 2)
+            data[label] += f" (±{humanized_percent(self.error(number), 0)})"
 
         click.echo(f"\nAnalysis of @{self.target.screen_name}'s followers\n")
         largest = max(len(key) for key in data.keys())
