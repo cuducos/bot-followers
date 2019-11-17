@@ -5,11 +5,6 @@ import click
 from peewee import CharField, FloatField, Model, SqliteDatabase
 
 
-def humanized_percent(number, decimals=0):
-    result = round(number * 100, decimals) if decimals else round(number * 100)
-    return f"{result}%"
-
-
 class User(Model):
     screen_name = CharField(max_length=15, unique=True, primary_key=True, index=True)
     botometer = FloatField(index=True, null=True)
@@ -65,25 +60,3 @@ class Database:
     def percent(self, number):
         match = self.users.where(User.botometer >= number).count()
         return match / self.count
-
-    def report(self):
-        data = {
-            "Total followers": f"{self.target.followers_count:,}",
-            "Followers analyzed": f"{self.count:,}",
-            "Percentage analyzed": humanized_percent(
-                self.count / self.target.followers_count, 2
-            ),
-        }
-
-        for number in (0.5, 0.75, 0.8, 0.9, 0.95):
-            label = f"Accounts with +{humanized_percent(number)} in Botometer"
-            result = humanized_percent(self.percent(number), 2)
-            error = humanized_percent(self.error(number), 0)
-            data[label] = f"{result} (±{error})"
-
-        click.echo(f"\nAnalysis of @{self.target.screen_name}'s followers\n")
-        largest = max(len(key) for key in data.keys())
-        for key, value in data.items():
-            label = key.ljust(largest + 2, ".")
-            click.echo(f"{label}: {value}")
-        click.echo(" ")
