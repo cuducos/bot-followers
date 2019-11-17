@@ -16,6 +16,8 @@ Requirements
   * ``TWITTER_ACCESS_TOKEN_SECRET``
   * ``BOTOMETER_MASHAPE_KEY``
 
+The Botometer API key is created when you create a new app in the [RapidAPI dashboard](https://rapidapi.com/developer/new).
+
 Usage
 -----
 
