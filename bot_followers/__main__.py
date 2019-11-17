@@ -7,6 +7,7 @@ from bot_followers import BotFollowers
 
 import traceback
 from os import environ
+<<<<<<< HEAD
 from sys import exit
 
 try:
@@ -15,11 +16,25 @@ try:
     environ["TWITTER_ACCESS_TOKEN_KEY"]
     environ["TWITTER_ACCESS_TOKEN_SECRET"]
     environ["BOTOMETER_MASHAPE_KEY"]
+=======
+from sys import exit 
+
+try:
+    environ['TWITTER_CONSUMER_KEY']
+    environ['TWITTER_CONSUMER_SECRET']
+    environ['TWITTER_ACCESS_TOKEN_KEY']
+    environ['TWITTER_ACCESS_TOKEN_SECRET'] 
+    environ['BOTOMETER_MASHAPE_KEY']
+>>>>>>> 6e994d38f944e0991fc3c06c675e44779bb09fb4
 except KeyError:
     print("Environment variable(s) not found")
     print("Please set it using .env file or env VAR=VALUE")
     exit()
+<<<<<<< HEAD
 
+=======
+     
+>>>>>>> 6e994d38f944e0991fc3c06c675e44779bb09fb4
 
 @click.group()
 @click.argument("account")
