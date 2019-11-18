@@ -1,12 +1,10 @@
-Bot Follower
-================
+# Bot Followers [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
 
 Tiny script to check whether followers of a given Twitter account are bots.
 This code is a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup). 
 
-Requirements
-------------
+## Requirements
 
 [Python](https://python.org) 3.8, [Pipenv](https://pipenv.readthedocs.io/en/latest/) and environment variables with your [Twitter API keys](https://developer.twitter.com/apps) and with [Botometer API key](https://market.mashape.com/OSoMe/botometer):
 
@@ -18,8 +16,7 @@ Requirements
 
 The Botometer API key is created when you create a new app in the [RapidAPI dashboard](https://rapidapi.com/developer/new).
 
-Usage
------
+## Usage
 
 Run the CLI within Pipenv's virtualenv:
 
@@ -52,7 +49,6 @@ Accounts with +90% in Botometer..: 9.2% (±0.86%)
 Accounts with +95% in Botometer..: 1.16% (±0.32%)
 ```
 
-Contributing
-------------
+## Contributing
 
 Please, format your code with [Black](https://github.com/ambv/black).
