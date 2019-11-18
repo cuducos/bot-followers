@@ -13,7 +13,7 @@ class Authentication:
         self.consumer_secret = config("TWITTER_CONSUMER_SECRET")
         self.access_token = config("TWITTER_ACCESS_TOKEN_KEY")
         self.access_token_secret = config("TWITTER_ACCESS_TOKEN_SECRET")
-        self.mashape_key = config("BOTOMETER_MASHAPE_KEY", default=None)
+        self.mashape_key = config("BOTOMETER_MASHAPE_KEY")
 
     @property
     def tweepy(self):
