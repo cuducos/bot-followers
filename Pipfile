@@ -4,12 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+isort = "*"
 ipython = "*"
 
 [packages]
 arrow = "*"
 botometer = "*"
 click = "*"
+dj-database-url = "*"
+django = "*"
+django-extensions = "*"
 peewee = "*"
 python-decouple = "*"
 tweepy = "*"
