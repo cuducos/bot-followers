@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class CoreConfig(AppConfig):
-    name = "core"
+    name = "web.core"
+    verbose_name = "Bot Followers"

@@ -38,6 +38,6 @@ class TestJobModel(TestCase):
         self.assertEqual(self.job.total(), 2)
 
     def test_percent_over(self):
-        self.assertEqual(self.job.percent_over(1.0), 0)
-        self.assertEqual(self.job.percent_over(0.9), 0.5)
-        self.assertEqual(self.job.percent_over(0.5), 1)
+        self.assertEqual(self.job.percent_over(1.0), (0, 0))
+        self.assertEqual(self.job.percent_over(0.9), (0.5, 0.6929646455628166))
+        self.assertEqual(self.job.percent_over(0.5), (1, 0))

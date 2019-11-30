@@ -16,6 +16,7 @@ class LowerCaseCharField(models.CharField):
 
 class Job(models.Model):
     screen_name = LowerCaseCharField(max_length=15, unique=True, db_index=True)
+    total_followers = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def accounts(self):
@@ -26,12 +27,14 @@ class Job(models.Model):
 
     def percent_over(self, number):
         match = self.accounts().filter(botometer__gte=number).count()
-        return match / self.total()
-
-    def error(self, number):
+        percent = match / self.total()
         z_score = 1.96  # 0.95 confidence
-        proportion = self.percent(number)
-        return z_score * sqrt(proportion * (1 - proportion) / self.total())
+        error = z_score * sqrt(percent * (1 - percent) / self.total())
+        return percent, error
+
+    class Meta:
+        ordering = ("screen_name",)
+        verbose_name = "report"
 
 
 class Account(models.Model):

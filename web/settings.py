@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "web.core",
+    "web.core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +58,7 @@ ROOT_URLCONF = "web.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": (os.path.join(BASE_DIR, "web", "templates"),),
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,9 +96,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = "pt-br"
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "America/Sao_Paulo"
+TIME_ZONE = config("TIME_ZONE", default="America/Sao_Paulo")
 
 USE_I18N = True
 

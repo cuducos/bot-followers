@@ -6,7 +6,9 @@ from sqlite3 import connect
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from tqdm import tqdm
+from tweepy import API, Cursor
 
+from bot_followers.authentication import authentication
 from web.core.models import Account, Job
 
 
@@ -37,34 +39,50 @@ class Command(BaseCommand):
     help = "Import databases from Bot Followers CLI version"
 
     def add_arguments(self, parser):
-        parser.add_argument("sqlite", help="Path to a SQLite3 file")
+        parser.add_argument("sqlite", nargs="+", help="Path to a SQLite3 file")
 
     def handle(self, *args, **options):
-        self.path = Path(options["sqlite"]).absolute()
-        if not self.path.exists():
-            raise CommandError(f"{self.path} does not exist.")
-        if not self.path.is_file():
-            raise CommandError(f"{self.path} is not a file.")
+        self.paths = tuple(Path(path).absolute() for path in options["sqlite"])
+        for path in self.paths:
+            if not path.exists():
+                raise CommandError(f"{path} does not exist.")
+            if not path.is_file():
+                raise CommandError(f"{path} is not a file.")
 
-        # make sure we have a job instance
-        job_data = {"screen_name": self.path.stem}
-        job, _ = Job.objects.get_or_create(**job_data, defaults=job_data)
+        # make sure we have the job instances
+        for path in self.paths:
+            api = API(authentication.tweepy, wait_on_rate_limit=True)
+            user = api.get_user(path.stem)
+            job, _ = Job.objects.update_or_create(
+                screen_name=path.stem,
+                defaults={
+                    "screen_name": path.stem,
+                    "total_followers": user.followers_count,
+                },
+            )
 
+        # prepare to import
         six_months_ago = timezone.now() - timedelta(days=180)
-        with LegacyDatabase(self.path) as db:
-            total = db.count()
-            progress = tqdm(unit="record", total=total)
+        total = 0
+        for path in self.paths:
+            with LegacyDatabase(path) as db:
+                total += db.count()
 
-            for row in db.rows():
-                account, is_new_account = Account.objects.get_or_create(
-                    screen_name=row["screen_name"], defaults=row
-                )
+        # import followers & botometer results
+        progress = tqdm(unit="record", total=total)
+        for path in self.paths:
+            with LegacyDatabase(path) as db:
+                for row in db.rows():
+                    account, is_new_account = Account.objects.get_or_create(
+                        screen_name=row["screen_name"], defaults=row
+                    )
 
-                if not is_new_account and account.last_update < six_months_ago:
-                    account.botometer = row["botometer"]
-                    account.save()
+                    if not is_new_account and account.last_update < six_months_ago:
+                        account.botometer = row["botometer"]
+                        account.save()
 
-                if not account.follower_of.filter(pk=job.pk).exists():
-                    account.follower_of.add(job)
+                    job = Job.objects.get(screen_name=path.stem)
+                    if not account.follower_of.filter(pk=job.pk).exists():
+                        account.follower_of.add(job)
 
-                progress.update(1)
+                    progress.update(1)
