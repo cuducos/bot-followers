@@ -14,8 +14,11 @@ click = "*"
 dj-database-url = "*"
 django = "*"
 django-extensions = "*"
+django-test-without-migrations = "*"
+mixer = "*"
 peewee = "*"
 python-decouple = "*"
+tqdm = "*"
 tweepy = "*"
 
 [requires]
