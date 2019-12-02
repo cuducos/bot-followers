@@ -3,7 +3,7 @@ from celery.task.control import revoke
 
 from web.core.external.botometer import botometer
 from web.core.external.twitter import Twitter
-from web.core.models import Job, Account
+from web.core.models import Account, Job
 
 
 @shared_task
