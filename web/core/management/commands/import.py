@@ -1,14 +1,14 @@
 from dataclasses import dataclass
-from datetime import timedelta
 from pathlib import Path
 from sqlite3 import connect
 
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from tqdm import tqdm
-from tweepy import API, Cursor
+from tweepy import API
 
-from bot_followers.authentication import authentication
+from web.core.external.authentication import authentication
 from web.core.models import Account, Job
 
 
@@ -62,7 +62,7 @@ class Command(BaseCommand):
             )
 
         # prepare to import
-        six_months_ago = timezone.now() - timedelta(days=180)
+        limit = timezone.now() - settings.CACHE_BOTOMETER_RESULTS_FOR_DAYS
         total = 0
         for path in self.paths:
             with LegacyDatabase(path) as db:
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                         screen_name=row["screen_name"], defaults=row
                     )
 
-                    if not is_new_account and account.last_update < six_months_ago:
+                    if not is_new_account and account.last_update < limit:
                         account.botometer = row["botometer"]
                         account.save()
 

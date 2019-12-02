@@ -1,58 +1,49 @@
-Bot Follower
-================
+# Bot Follower
 
-Tiny script to check whether followers of a given Twitter account are bots.
+A web app to check whether followers of a given Twitter account are bots.
 This code is a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup). 
 
-Requirements
-------------
+## Requirements
 
-[Python](https://python.org) 3.8, [Pipenv](https://pipenv.readthedocs.io/en/latest/) and environment variables with your [Twitter API keys](https://developer.twitter.com/apps) and with [Botometer API key](https://market.mashape.com/OSoMe/botometer):
+* [Docker Compose](https://docs.docker.com/compose/)
+* [Twitter API keys](https://developer.twitter.com/apps)
+* [Botometer API key](https://market.mashape.com/OSoMe/botometer)
 
-  * ``TWITTER_CONSUMER_KEY``
-  * ``TWITTER_CONSUMER_SECRET``
-  * ``TWITTER_ACCESS_TOKEN_KEY``
-  * ``TWITTER_ACCESS_TOKEN_SECRET``
-  * ``BOTOMETER_MASHAPE_KEY``
+## Setup
 
-The Botometer API key is created when you create a new app in the [RapidAPI dashboard](https://rapidapi.com/developer/new).
+Copy `.env.sample` as `.env` and fill the environment values as necessary. I tried to use meaningful variables names, but fell free to ask here if anything is not clear.
+ 
+## Running
 
-Usage
------
-
-Run the CLI within Pipenv's virtualenv:
+First, we need to run migrations:
 
 ```bash
-$ pipenv shell
-$ python -m bot_followers <account handle> <command>
+$ docker-compose run --rm django python manage.py migrate
 ```
 
-Available commands are `analyze` and `report`. For example:
+Then we need to collect statics:
 
 ```bash
-$ pipenv run python -m bot_followers borsalino analyze
+$ docker-compose run --rm django python manage.py collectstatics --noinput
 ```
 
-After a while, you can check a report (even before `analyze` command has finish its job):
+Finally, create a _super_ user for yourself:
 
-```
-$ run python -m bot_followers borsalino analyze
-
-Analysis of @borsalino's followers
-
-Total followers..................: 5,441,059
-Followers analyzed...............: 4,380
-Percentage analyzed..............: 0.08%
-
-Accounts with +50% in Botometer..: 25.37% (±1.29%)
-Accounts with +75% in Botometer..: 18.56% (±1.15%)
-Accounts with +80% in Botometer..: 13.68% (±1.02%)
-Accounts with +90% in Botometer..: 9.2% (±0.86%)
-Accounts with +95% in Botometer..: 1.16% (±0.32%)
+```bash
+$ docker-compose run --rm django python manage.py createsuperuser
 ```
 
-Contributing
-------------
+Now access [`localhost:8000`](http://localhost:8000) and create a proper user to access the web app without _super_ powers: all you need to do is to add just the permission to _view job_ in the Django Admin interface.
+
+### Importing data from the (old) CLI version
+
+There's a command to import data generated in the CLI, the `.sqlite3` generated files:
+
+```bash
+$ docker-compose run --rm django python manage.py import /path/to/borsalino.sqlite3
+```
+
+## Contributing
 
 Please, format your code with [Black](https://github.com/ambv/black).

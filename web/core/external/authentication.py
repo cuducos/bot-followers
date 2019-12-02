@@ -1,6 +1,6 @@
 from os import getcwd
 
-from decouple import AutoConfig
+from django.conf import settings
 from tweepy import OAuthHandler
 
 
@@ -8,12 +8,11 @@ class Authentication:
     """Holds authentication data for further usage in the script"""
 
     def __init__(self):
-        config = AutoConfig(getcwd())
-        self.consumer_key = config("TWITTER_CONSUMER_KEY")
-        self.consumer_secret = config("TWITTER_CONSUMER_SECRET")
-        self.access_token = config("TWITTER_ACCESS_TOKEN_KEY")
-        self.access_token_secret = config("TWITTER_ACCESS_TOKEN_SECRET")
-        self.mashape_key = config("BOTOMETER_MASHAPE_KEY")
+        self.consumer_key = settings.TWITTER_CONSUMER_KEY
+        self.consumer_secret = settings.TWITTER_CONSUMER_SECRET
+        self.access_token = settings.TWITTER_ACCESS_TOKEN_KEY
+        self.access_token_secret = settings.TWITTER_ACCESS_TOKEN_SECRET
+        self.mashape_key = settings.BOTOMETER_MASHAPE_KEY
 
     @property
     def tweepy(self):

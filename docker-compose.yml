@@ -1,0 +1,53 @@
+version: "3"
+services:
+
+  django:
+    build:
+      context: .
+    depends_on:
+      - db
+      - broker
+      - worker
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/web
+
+  worker:
+    build:
+      context: .
+    command: ["celery", "worker", "--app", "web.core"]
+    depends_on:
+      - broker
+    env_file:
+      - .env
+    volumes:
+      - .:/web
+
+  broker:
+    image: rabbitmq:3.8.1-alpine
+
+  db:
+    image: postgres:12.1-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+
+  flower:
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - .:/web
+    depends_on:
+      - broker
+    ports:
+      - 5555:5555
+    command: ["flower", "--app", "web.core"]
+

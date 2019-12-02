@@ -1,12 +1,17 @@
 from django.contrib import admin
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-from bot_followers import humanized_percent
 from web.core.models import Job
 
 
 def cell(data, detail):
     return mark_safe(f"{data}<br><small>{detail}</small>")
+
+
+def humanized_percent(number, decimals=2):
+    result = round(number * 100, decimals) if decimals else round(number * 100)
+    return f"{result}%"
 
 
 class JobModelAdmin(admin.ModelAdmin):
@@ -19,25 +24,39 @@ class JobModelAdmin(admin.ModelAdmin):
         "over80",
         "over90",
         "over95",
+        "status",
     )
 
     def formatted_screen_name(self, job):
         user = f'<a href="https://twitter.com/{job.screen_name}">@{job.screen_name}</a>'
-        followers = f"{job.total_followers:,} followers"
+        followers = f"{job.total_followers:,} followers" if job.total_followers else ""
         return cell(user, followers)
 
     formatted_screen_name.short_description = "Twitter account"
 
     def analyzed(self, job):
         count = job.total()
-        percent = humanized_percent(job.total() / job.total_followers)
+        percent = ""
+        if job.total_followers:
+            percent = humanized_percent(job.total() / job.total_followers)
         return cell(count, percent)
 
     analyzed.short_description = "Followes analyzed"
 
     def _over(self, job, threshold):
-        percent, error = (humanized_percent(n) for n in job.percent_over(threshold))
-        return cell(percent, f"±{error}")
+        percent, error = job.percent_over(threshold)
+
+        if isinstance(percent, float):
+            percent = humanized_percent(percent)
+        else:
+            percent = ""
+
+        if isinstance(error, float):
+            error = f"±{humanized_percent(error)}"
+        else:
+            error = ""
+
+        return cell(percent, error)
 
     def over50(self, job):
         return self._over(job, 0.5)
@@ -63,6 +82,11 @@ class JobModelAdmin(admin.ModelAdmin):
         return self._over(job, 0.95)
 
     over95.short_description = "+95% Botometer"
+
+    def status(self, job):
+        return render_to_string("core/job_action_form.html", {"job": job})
+
+    status.short_description = "Actions"
 
 
 admin.site.register(Job, JobModelAdmin)

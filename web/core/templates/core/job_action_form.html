@@ -1,0 +1,9 @@
+{% if job.celery_task_id %}
+<form action="{% url 'pause' %}" method="post">
+{% else %}
+<form action="{% url 'start' %}" method="post">
+{% endif %}
+  <input type="hidden" name="csrfmiddlewaretoken">
+  <input type="hidden" name="screen_name" value="{{ job.screen_name }}">
+  <input type="submit" value="{% if job.celery_task_id %}Pause{% else %}Re-start{% endif %}">
+</form>

@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from web.core.views import home
+from web.core.views import home, pause, start
 
-urlpatterns = [path("", home, name="home"), path("dashboard/", admin.site.urls)]
+urlpatterns = [
+    path("", home, name="home"),
+    path("start/", start, name="start"),
+    path("pause/", pause, name="pause"),
+    path("dashboard/", admin.site.urls),
+]
