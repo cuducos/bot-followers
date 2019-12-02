@@ -1,0 +1,38 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v1
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -U pipenv
+        pipenv install --dev
+
+    - name: Run tests
+      run: |
+        pipenv run python manage.py collectstatic --no-input
+        pipenv run python manage.py test
+      env:
+        TWITTER_CONSUMER_KEY: my-consumer-key
+        TWITTER_CONSUMER_SECRET: my-consumer-secret
+        TWITTER_ACCESS_TOKEN_KEY: my-twitter_access_token_key
+        TWITTER_ACCESS_TOKEN_SECRET: my-twitter_access_token_secret
+        BOTOMETER_MASHAPE_KEY: my-botometer_mashape_key
+        SECRET_KEY: my-secret-key
+        DATABASE_URL: "sqlite:///:memory:"
+        CELERY_BROKER_URL: amqp://guest:guest@localhost//
+        CACHE_BOTOMETER_RESULTS_FOR_DAYS: 180

@@ -1,8 +1,10 @@
-# Bot Followers [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
+# Bot Followers [![GitHub Actions: Tests workflow](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]() 
 
 A web app to check whether followers of a given Twitter account are bots.
 This code is a _fork_ of [Twitter
-Clean-up](https://github.com/cuducos/twitter-cleanup). 
+Clean-up](https://github.com/cuducos/twitter-cleanup).
+
+> If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli). 
 
 ## Requirements
 
@@ -46,4 +48,9 @@ $ docker-compose run --rm django python manage.py import /path/to/borsalino.sqli
 
 ## Contributing
 
-Please, format your code with [Black](https://github.com/ambv/black).
+Please, run tests and format your code with [Black](https://github.com/ambv/black):
+
+```bash
+$ black .
+$ python manage.py test
+```
