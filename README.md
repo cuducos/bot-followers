@@ -1,4 +1,4 @@
-# Bot Follower
+# Bot Followers [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
 
 A web app to check whether followers of a given Twitter account are bots.
 This code is a _fork_ of [Twitter
