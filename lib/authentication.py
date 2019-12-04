@@ -1,6 +1,4 @@
-from os import getcwd
-
-from django.conf import settings
+from lib import settings
 from tweepy import OAuthHandler
 
 

@@ -1,8 +1,8 @@
 from celery import shared_task
 from celery.task.control import revoke
 
-from web.core.external.botometer import botometer
-from web.core.external.twitter import Twitter
+from lib.botometer import botometer
+from lib.twitter import Twitter
 from web.core.models import Account, Job
 
 

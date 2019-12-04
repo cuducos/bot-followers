@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from tweepy import API, Cursor
 
-from web.core.external.authentication import authentication
+from lib.authentication import authentication
 
 
 @dataclass
