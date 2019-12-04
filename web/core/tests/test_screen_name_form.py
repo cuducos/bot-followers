@@ -31,6 +31,7 @@ class TestScreenNameForm(TestCase):
             "234567890123456",
             "bcdefghijklmkno",
             "lettesAnd123",
+            "I_have_an_under",
         )
         for screen_name in screen_names:
             with self.subTest():
