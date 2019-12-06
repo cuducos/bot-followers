@@ -8,7 +8,7 @@ from django.utils import timezone
 from tqdm import tqdm
 from tweepy import API
 
-from web.core.external.authentication import authentication
+from lib.authentication import authentication
 from web.core.models import Account, Job
 
 
