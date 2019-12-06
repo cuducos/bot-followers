@@ -5,9 +5,9 @@ ENV PYTHONBREAKPOINT=ipdb.set_trace
 
 WORKDIR /web
 
+COPY manage.py manage.py
 COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
-COPY manage.py manage.py
 
 RUN set -ex && \
     apt-get update && \

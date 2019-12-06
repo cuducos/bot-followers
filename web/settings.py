@@ -120,6 +120,9 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Bot Follower
 
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 
 ROOT_REDIRECTS_TO = "admin:core_job_changelist"
