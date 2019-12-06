@@ -41,6 +41,9 @@ class TestJobModel(TestCase):
         self.assertEqual(self.job.percent_over(1.0), (0, 0))
         self.assertEqual(self.job.percent_over(0.9), (0.5, 0.6929646455628166))
         self.assertEqual(self.job.percent_over(0.5), (1, 0))
+        self.assertEqual(
+            self.job.percent_over(0.62, over_or_equal=False), (0.5, 0.6929646455628166)
+        )
 
     def test_save_task(self):
         self.job.save_task("42")

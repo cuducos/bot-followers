@@ -43,8 +43,8 @@ class JobModelAdmin(admin.ModelAdmin):
 
     analyzed.short_description = "Followes analyzed"
 
-    def _over(self, job, threshold):
-        percent, error = job.percent_over(threshold)
+    def _over(self, job, threshold, over_or_equal=True):
+        percent, error = job.percent_over(threshold, over_or_equal=over_or_equal)
 
         if isinstance(percent, float):
             percent = humanized_percent(percent)
@@ -59,7 +59,7 @@ class JobModelAdmin(admin.ModelAdmin):
         return cell(percent, error)
 
     def over50(self, job):
-        return self._over(job, 0.5)
+        return self._over(job, 0.5, over_or_equal=False)
 
     over50.short_description = "+50% Botometer"
 

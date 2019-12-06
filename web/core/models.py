@@ -30,11 +30,14 @@ class Job(models.Model):
     def total(self):
         return self.accounts().count()
 
-    def percent_over(self, number):
+    def percent_over(self, number, over_or_equal=True):
         if not self.total():
             return None, None
 
-        match = self.accounts().filter(botometer__gte=number).count()
+        key = "botometer__gte" if over_or_equal else "botometer__gt"
+        kwargs = {key: number}
+        match = self.accounts().filter(**kwargs).count()
+
         percent = match / self.total()
         z_score = 1.96  # 0.95 confidence
         error = z_score * sqrt(percent * (1 - percent) / self.total())
