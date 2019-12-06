@@ -34,7 +34,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data:/var/lib/postgresql
+      - ./data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -50,4 +50,3 @@ services:
     ports:
       - 5555:5555
     command: ["flower", "--app", "web.core"]
-
