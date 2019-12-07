@@ -1,7 +1,6 @@
 # Bot Followers [![GitHub Actions: Tests workflow](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]() 
 
-A web app to check whether followers of a given Twitter account are bots.
-This code is a _fork_ of [Twitter
+A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
 
 > If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli). 
@@ -14,7 +13,7 @@ Clean-up](https://github.com/cuducos/twitter-cleanup).
 
 ## Setup
 
-Copy `.env.sample` as `.env` and fill the environment values as necessary. I tried to use meaningful variables names, but fell free to ask here if anything is not clear.
+Copy `.env.sample` as `.env` and fill the environment values as apropriated. I tried to use meaningful variables names, but fell free to [ask](https://github.com/cuducos/bot-followers/issues) if anything is not clear.
  
 ## Running
 
@@ -36,19 +35,31 @@ Finally, create a _super_ user for yourself:
 $ docker-compose run --rm django python manage.py createsuperuser
 ```
 
-Now access [`localhost:8000`](http://localhost:8000) and create a proper user to access the web app without _super_ powers: all you need to do is to add just the permission to _view job_ in the Django Admin interface.
+Now access [`localhost:8000`](http://localhost:8000) and create a proper user to access the web app without _super_ powers: all you need to do is to add just the permission to _view report_ in the Django Admin interface.
 
-### Importing data from the (old) CLI version
+### Commands
 
-There's a command to import data generated in the CLI, the `.sqlite3` generated files:
+#### Importing data from the (old) CLI version
 
 ```bash
 $ docker-compose run --rm django python manage.py import /path/to/borsalino.sqlite3
 ```
 
+#### Check whether active/inactive jobs are in sync with reality
+
+```bash
+$ docker-compose run --rm django python manage.py updatecelerytasks
+```
+
+#### Empty the queue of pending tasks
+
+```bash
+$ docker-compose run --rm django python manage.py purgecelerytasks
+```
+
 ## Contributing
 
-Please, run tests and format your code with [Black](https://github.com/ambv/black):
+Please, write and run tests, and format your code with [Black](https://github.com/ambv/black):
 
 ```bash
 $ black .
