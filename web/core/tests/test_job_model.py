@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from mixer.backend.django import mixer
 
 from web.core.models import Account, Job
@@ -22,21 +22,35 @@ class TestJobModel(TestCase):
     def test_query(self):
         self.assertTrue(Job.objects.filter(screen_name="borsalino").exists())
 
+    def test_analyzed_followers_queryset(self):
+        self.assertTrue(2, Job.objects.analyzed_followers().count())
+
+    def test_report_queryset(self):
+        mixer.blend(Job, total_followers=42)
+        mixer.blend(Job, total_followers=None)
+        self.assertEqual(1, Job.objects.report().count())
+        Account.objects.all().delete()
+        self.assertFalse(Job.objects.report().exists())
+
     def test_accounts(self):
-        self.assertEqual(self.job.accounts().count(), 2)
+        self.assertEqual(self.job.followers.analyzed().count(), 2)
         self.assertTrue(
-            self.job.accounts().filter(screen_name=self.account1.screen_name).exists()
+            self.job.followers.analyzed()
+            .filter(screen_name=self.account1.screen_name)
+            .exists()
         )
         self.assertTrue(
-            self.job.accounts().filter(screen_name=self.account2.screen_name).exists()
+            self.job.followers.analyzed()
+            .filter(screen_name=self.account2.screen_name)
+            .exists()
         )
         self.assertFalse(
-            self.job.accounts().filter(screen_name=self.account3.screen_name).exists()
+            self.job.followers.analyzed()
+            .filter(screen_name=self.account3.screen_name)
+            .exists()
         )
 
-    def test_total(self):
-        self.assertEqual(self.job.total(), 2)
-
+    @override_settings(Z_SCORE=1.96)
     def test_percent_over(self):
         self.assertEqual(self.job.percent_over(1.0), (0, 0))
         self.assertEqual(self.job.percent_over(0.9), (0.5, 0.6929646455628166))

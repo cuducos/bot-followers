@@ -1,7 +1,10 @@
 from django.conf import settings
+
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect, resolve_url
+from django.views.decorators.cache import cache_page
+from django.views.decorators.http import require_safe
 
 from web.core import tasks
 from web.core.forms import ScreenNameForm
@@ -9,7 +12,14 @@ from web.core.models import Job
 
 
 def home(request):
-    return redirect(resolve_url(settings.ROOT_REDIRECTS_TO))
+    return redirect(resolve_url(settings.MAIN_ADMIN_VIEW))
+
+
+@require_safe
+@cache_page(60 * 60 * 3)
+def api(request):
+    data = tuple(job.json() for job in Job.objects.report())
+    return JsonResponse({"data": data})
 
 
 def screen_name_view(action):
@@ -28,7 +38,7 @@ def screen_name_view(action):
 
         message = action(form.cleaned_data["screen_name"])
         messages.info(request, message)
-        return redirect(resolve_url(settings.ROOT_REDIRECTS_TO))
+        return redirect(resolve_url(settings.MAIN_ADMIN_VIEW))
 
     return view
 

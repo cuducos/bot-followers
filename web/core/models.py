@@ -4,19 +4,12 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
-
-class LowerCaseCharField(models.CharField):
-    def pre_save(self, instance, add):
-        value = getattr(instance, self.attname)
-        setattr(instance, self.attname, value.lower())
-        return super(LowerCaseCharField, self).pre_save(instance, add)
-
-    def to_python(self, value):
-        value = super(LowerCaseCharField, self).to_python(value)
-        return value.lower()
+from web.core.fields import LowerCaseCharField
+from web.core.querysets import AccountQuerySet, JobQuerySet
+from web.core.serializers import JobSerializer
 
 
-class Job(models.Model):
+class Job(models.Model, JobSerializer):
     screen_name = LowerCaseCharField(max_length=15, unique=True, db_index=True)
     total_followers = models.IntegerField(null=True)
     celery_task_id = models.CharField(
@@ -24,24 +17,20 @@ class Job(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def accounts(self):
-        return self.account_set.exclude(botometer=None)
+    objects = JobQuerySet.as_manager()
 
-    def total(self):
-        return self.accounts().count()
-
-    def percent_over(self, number, over_or_equal=True):
-        if not self.total():
+    def percent_over(self, number, over_or_equal=True, wrapper=None):
+        if not self.followers.analyzed().exists():
             return None, None
 
-        key = "botometer__gte" if over_or_equal else "botometer__gt"
-        kwargs = {key: number}
-        match = self.accounts().filter(**kwargs).count()
+        equal = "e" if over_or_equal else ""
+        kwargs = {f"botometer__gt{equal}": number}
+        macth_count = self.followers.analyzed().filter(**kwargs).count()
 
-        percent = match / self.total()
-        z_score = 1.96  # 0.95 confidence
-        error = z_score * sqrt(percent * (1 - percent) / self.total())
-        return percent, error
+        total = self.followers.analyzed().count()
+        percent = macth_count / total
+        error = settings.Z_SCORE * sqrt(percent * (1 - percent) / total)
+        return wrapper(percent, error) if wrapper else (percent, error)
 
     def save_task(self, task_id):
         self.celery_task_id = task_id
@@ -55,8 +44,10 @@ class Job(models.Model):
 class Account(models.Model):
     screen_name = LowerCaseCharField(max_length=15, unique=True, db_index=True)
     botometer = models.FloatField(db_index=True, null=True)
-    follower_of = models.ManyToManyField(Job, db_index=True)
+    follower_of = models.ManyToManyField(Job, related_name="followers", db_index=True)
     last_update = models.DateTimeField(auto_now=True)
+
+    objects = AccountQuerySet.as_manager()
 
     def needs_update(self):
         if self.botometer is None:

@@ -10,8 +10,15 @@ def cell(data, detail):
 
 
 def humanized_percent(number, decimals=2):
+    if number is None:
+        return ""
+
     result = round(number * 100, decimals) if decimals else round(number * 100)
     return f"{result}%"
+
+
+def report(percent, error):
+    return cell(humanized_percent(percent), f"±{humanized_percent(error)}")
 
 
 class JobModelAdmin(admin.ModelAdmin):
@@ -35,51 +42,35 @@ class JobModelAdmin(admin.ModelAdmin):
     formatted_screen_name.short_description = "Twitter account"
 
     def analyzed(self, job):
-        count = job.total()
-        percent = ""
+        count, percent = job.followers.analyzed().count(), humanized_percent(0)
         if job.total_followers:
-            percent = humanized_percent(job.total() / job.total_followers)
+            percent = humanized_percent(count / job.total_followers)
         return cell(count, percent)
 
-    analyzed.short_description = "Followes analyzed"
-
-    def _over(self, job, threshold, over_or_equal=True):
-        percent, error = job.percent_over(threshold, over_or_equal=over_or_equal)
-
-        if isinstance(percent, float):
-            percent = humanized_percent(percent)
-        else:
-            percent = ""
-
-        if isinstance(error, float):
-            error = f"±{humanized_percent(error)}"
-        else:
-            error = ""
-
-        return cell(percent, error)
+    analyzed.short_description = "Followers analyzed"
 
     def over50(self, job):
-        return self._over(job, 0.5, over_or_equal=False)
+        return job.percent_over(0.5, over_or_equal=False, wrapper=report)
 
     over50.short_description = "+50% Botometer"
 
     def over75(self, job):
-        return self._over(job, 0.75)
+        return job.percent_over(0.75, wrapper=report)
 
     over75.short_description = "+75% Botometer"
 
     def over80(self, job):
-        return self._over(job, 0.8)
+        return job.percent_over(0.8, wrapper=report)
 
     over80.short_description = "+80% Botometer"
 
     def over90(self, job):
-        return self._over(job, 0.9)
+        return job.percent_over(0.9, wrapper=report)
 
     over90.short_description = "+90% Botometer"
 
     def over95(self, job):
-        return self._over(job, 0.95)
+        return job.percent_over(0.9, wrapper=report)
 
     over95.short_description = "+95% Botometer"
 

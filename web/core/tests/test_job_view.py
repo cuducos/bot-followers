@@ -59,7 +59,7 @@ class TestJobStartView(TestCase, BaseTestJobView):
         job = Job.objects.get(screen_name=FORM["screen_name"])
         tasks.start.delay.assert_called_once_with(job.pk)
         self.assertEqual(job.celery_task_id, "42")
-        self.assertRedirects(response, resolve_url(settings.ROOT_REDIRECTS_TO))
+        self.assertRedirects(response, resolve_url(settings.MAIN_ADMIN_VIEW))
 
     @with_user
     @patch("web.core.views.tasks")
@@ -72,7 +72,7 @@ class TestJobStartView(TestCase, BaseTestJobView):
         job = Job.objects.get(screen_name=FORM["screen_name"])
         tasks.start.delay.assert_called_once_with(job.pk)
         self.assertEqual(job.celery_task_id, "42")
-        self.assertRedirects(response, resolve_url(settings.ROOT_REDIRECTS_TO))
+        self.assertRedirects(response, resolve_url(settings.MAIN_ADMIN_VIEW))
 
 
 class TestJobPauseView(TestCase, BaseTestJobView):
@@ -89,7 +89,7 @@ class TestJobPauseView(TestCase, BaseTestJobView):
         job = Job.objects.get(screen_name=FORM["screen_name"])
         tasks.pause.delay.assert_called_once_with(job.pk)
         self.assertEqual(job.celery_task_id, None)
-        self.assertRedirects(response, resolve_url(settings.ROOT_REDIRECTS_TO))
+        self.assertRedirects(response, resolve_url(settings.MAIN_ADMIN_VIEW))
 
     @with_user
     @patch("web.core.views.tasks")
@@ -98,4 +98,4 @@ class TestJobPauseView(TestCase, BaseTestJobView):
         response = self.client.post(self.URL, FORM)
 
         tasks.pause.delay.assert_not_called()
-        self.assertRedirects(response, resolve_url(settings.ROOT_REDIRECTS_TO))
+        self.assertRedirects(response, resolve_url(settings.MAIN_ADMIN_VIEW))

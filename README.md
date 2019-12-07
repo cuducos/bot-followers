@@ -35,7 +35,17 @@ Finally, create a _super_ user for yourself:
 $ docker-compose run --rm django python manage.py createsuperuser
 ```
 
-Now access [`localhost:8000`](http://localhost:8000) and create a proper user to access the web app without _super_ powers: all you need to do is to add just the permission to _view report_ in the Django Admin interface.
+### Dashboard
+
+You can access a dashboard to control the app at  [`localhost:8000`](http://localhost:8000).
+
+**It's recommended** that you create a proper user to access the web app without _super_ powers: all you need to do is to:
+1. Login in as _superuser_ create a new user that is _staff_
+2. In the _Permissions_ menu, add just the permission to _view report_ to this new user
+
+### API
+
+There isa simple API to share the results without the need of user or login: [`localhost:8000/api/`](http://localhost:8000/api/).
 
 ### Commands
 

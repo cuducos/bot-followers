@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from datetime import timedelta
-from functools import partial
 
 from decouple import Csv, config
 from dj_database_url import parse
@@ -32,6 +31,8 @@ DEBUG = config("DEBUG", default="False", cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,12 +42,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "django_extensions",
     "web.core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -118,14 +121,30 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
-# Bot Follower
+# Cache
+# https://docs.djangoproject.com/en/2.2/topics/cache/
 
-if not DEBUG:
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+
+# Celery
+# https://docs.celeryproject.org/
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 
-ROOT_REDIRECTS_TO = "admin:core_job_changelist"
+
+# Django CORS headers
+# https://pypi.python.org/pypi/django-cors-headers/
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_METHODS = ("GET", "HEAD")
+
+
+# Bot Follower
+
+MAIN_ADMIN_VIEW = "admin:core_job_changelist"
+
+Z_SCORE = config("Z_SCORE", default="1.96", cast=float)  # default 0.95 confidence
 
 CACHE_BOTOMETER_RESULTS_FOR_DAYS = config(
     "CACHE_BOTOMETER_RESULTS_FOR_DAYS",
