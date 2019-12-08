@@ -1,4 +1,4 @@
-# Bot Followers [![GitHub Actions: Tests workflow](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
+# Bot Followers [![GitHub Actions: Tests](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
 
 A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
@@ -14,21 +14,21 @@ Clean-up](https://github.com/cuducos/twitter-cleanup).
 
 ## Development setup
 
-Copy `.env.sample` as `.env` and fill the environment values as apropriated. I tried to use meaningful variables names, but fell free to [ask](https://github.com/cuducos/bot-followers/issues) if anything is not clear.
+Copy `.env.sample` as `.env` and fill the environment values as appropriated. I tried to use meaningful variables names, but fell free to [ask](https://github.com/cuducos/bot-followers/issues) if anything is not clear.
 
 To start the services use the default `docker-compose up`.
 
 ## Deploy setup
 
-Having a Dokku-ready server, install the following Dokku plugins:
+Having a Dokku-ready server, install the following Dokku plug-ins:
 
 * [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
 * [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
 * [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
 
-Create an app for Bot Followers in Dokku, add it as a remote repository in your local Git repository, and activate the plugins.
+Create an app for Bot Followers in Dokku, add it as a remote repository in your local Git repository, and activate the plug-ins.
 
-For each variable in `.env.sample`, create an equivalent enviornment variable for your Dokku app.
+For each variable in `.env.sample`, create an equivalent environment variable for your Dokku app.
 
 ## Usage
 
@@ -37,7 +37,7 @@ The commands in this section might be prefixed by:
 * `docker-compose run --rm django` in **development** mode
 * `dokku run <app name>` in **production** mode
 
-### Dasboard
+### Dashboard
 
 In order to get the app ready, before visiting `/` at your server, you need to run migrations and create a user(s) to access the dashboard.
 
