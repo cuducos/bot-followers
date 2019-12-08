@@ -3,7 +3,9 @@
 A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
 
-> If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli).
+![Dashboard](dashboard.png)
+
+If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli).
 
 ## Requirements
 
