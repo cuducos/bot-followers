@@ -1,70 +1,78 @@
-# Bot Followers [![GitHub Actions: Tests workflow](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]() 
+# Bot Followers [![GitHub Actions: Tests workflow](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black workflow](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
 
 A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
 
-> If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli). 
+> If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli).
 
 ## Requirements
 
-* [Docker Compose](https://docs.docker.com/compose/)
 * [Twitter API keys](https://developer.twitter.com/apps)
 * [Botometer API key](https://market.mashape.com/OSoMe/botometer)
+* [Docker Compose](https://docs.docker.com/compose/) for the **development** mode instructions
+* [Dokku](http://dokku.viewdocs.io/dokku/) for the **production** mode (deploy) instructions
 
-## Setup
+## Development setup
 
 Copy `.env.sample` as `.env` and fill the environment values as apropriated. I tried to use meaningful variables names, but fell free to [ask](https://github.com/cuducos/bot-followers/issues) if anything is not clear.
- 
-## Running
 
-First, we need to run migrations:
+To start the services use the default `docker-compose up`.
 
-```bash
-$ docker-compose run --rm django python manage.py migrate
-```
+## Deploy setup
 
-Then we need to collect statics:
+Having a Dokku-ready server, install the following Dokku plugins:
 
-```bash
-$ docker-compose run --rm django python manage.py collectstatics --noinput
-```
+* [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
+* [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
+* [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
 
-Finally, create a _super_ user for yourself:
+Create an app for Bot Followers in Dokku, add it as a remote repository in your local Git repository, and activate the plugins.
 
-```bash
-$ docker-compose run --rm django python manage.py createsuperuser
-```
+For each variable in `.env.sample`, create an equivalent enviornment variable for your Dokku app.
 
-### Dashboard
+## Usage
 
-You can access a dashboard to control the app at  [`localhost:8000`](http://localhost:8000).
+The commands in this section might be prefixed by:
 
-**It's recommended** that you create a proper user to access the web app without _super_ powers: all you need to do is to:
+* `docker-compose run --rm django` in **development** mode
+* `dokku run <app name>` in **production** mode
+
+### Dasboard
+
+In order to get the app ready, before visiting `/` at your server, you need to run migrations and create a user(s) to access the dashboard.
+
+
+1. Run migrations with `python manage.py migrate`
+1. Create a _super_ user for yourself with `python manage.py createsuperuser`
+
+**It's recommended** to create a proper user to access the dashboard without _super_ powers: all you need to do is to:
+
 1. Login in as _superuser_ create a new user that is _staff_
-2. In the _Permissions_ menu, add just the permission to _view report_ to this new user
+2. Get back to the _edit_ page of this user
+3. In the _Permissions_ menu, add **only** the permission to _view report_ to this new user
 
 ### API
 
-There isa simple API to share the results without the need of user or login: [`localhost:8000/api/`](http://localhost:8000/api/).
+There is a simple JSON API at `/api/` to share the report data without the need of user or login.
 
-### Commands
+### Management commands
 
-#### Importing data from the (old) CLI version
+#### Importing data from the [CLI version](https://github.com/cuducos/bot-followers/tree/cli)
 
 ```bash
-$ docker-compose run --rm django python manage.py import /path/to/borsalino.sqlite3
+$ python manage.py import /path/to/borsalino.sqlite3
 ```
 
-#### Check whether active/inactive jobs are in sync with reality
+#### Check whether active/inactive jobs are in sync in the dashboard
 
 ```bash
-$ docker-compose run --rm django python manage.py updatecelerytasks
+$ python manage.py updatecelerytasks
 ```
 
 #### Empty the queue of pending tasks
 
 ```bash
-$ docker-compose run --rm django python manage.py purgecelerytasks
+$ python manage.py purgecelerytasks
 ```
 
 ## Contributing
