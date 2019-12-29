@@ -146,7 +146,7 @@ CORS_ALLOW_METHODS = ("GET", "HEAD")
 MAIN_ADMIN_VIEW = "admin:core_job_changelist"
 
 Z_SCORE = config("Z_SCORE", default="1.96", cast=float)  # default 0.95 confidence
-Z_SCORE_CONFIDENCE_TABLE = {1.96: "95%", 2.58: "99%", 1.64: "90"}
+Z_SCORE_CONFIDENCE_TABLE = {1.96: 0.95, 2.58: 0.99, 1.64: 0.9}
 
 CACHE_BOTOMETER_RESULTS_FOR_DAYS = config(
     "CACHE_BOTOMETER_RESULTS_FOR_DAYS",

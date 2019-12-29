@@ -25,6 +25,7 @@ class TestApiView(TestCase):
     def test_content(self):
         contents = self.resp.json()
         self.assertEqual(1, len(contents["data"]))
+        self.assertIsInstance(contents["confidence"], float)
 
         user, *_ = contents["data"]
         expected = {

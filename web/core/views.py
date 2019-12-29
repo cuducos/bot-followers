@@ -1,5 +1,6 @@
 from django.conf import settings
 
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseNotAllowed, JsonResponse
 from django.shortcuts import redirect, resolve_url
@@ -19,7 +20,8 @@ def home(request):
 @cache_page(60 * 60 * 3)
 def api(request):
     data = tuple(job.json() for job in Job.objects.report())
-    return JsonResponse({"data": data})
+    confidence = settings.Z_SCORE_CONFIDENCE_TABLE.get(settings.Z_SCORE)
+    return JsonResponse({"data": data, "confidence": confidence})
 
 
 def screen_name_view(action):
