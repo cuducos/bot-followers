@@ -1,4 +1,4 @@
-FROM python:3.8.0-slim
+FROM python:3.8.1-slim
 
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONBREAKPOINT=ipdb.set_trace
