@@ -79,12 +79,14 @@
           {% if action_form and actions_on_bottom and cl.show_admin_actions %}{% admin_actions %}{% endif %}
       {% endblock %}
       {% block pagination %}{% pagination cl %}{% endblock %}
+      {% if CONFIDENCE %}
       <div style="text-align:right">
-        <small>* Errors for 95% confidence.</small>
+        <small>{{ CONFIDENCE }}</small>
       </div>
       <br>
       &nbsp;
       <br>
+      {% endif %}
       <div id="toolbar">
         <form action="{% url 'start' %}" method="post">
           {% csrf_token %}
