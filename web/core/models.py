@@ -11,6 +11,7 @@ from web.core.serializers import JobSerializer
 
 class Job(models.Model, JobSerializer):
     screen_name = LowerCaseCharField(max_length=15, unique=True, db_index=True)
+    image = models.URLField(default="", blank=True)
     total_followers = models.IntegerField(null=True)
     celery_task_id = models.CharField(
         max_length=155, unique=True, db_index=True, default=None, null=True

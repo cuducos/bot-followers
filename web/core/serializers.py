@@ -5,6 +5,7 @@ class JobSerializer:
     def json(self):
         serialized = {
             "twitter_account": self.screen_name,
+            "image": self.image,
             "followers": self.total_followers,
             "analyzed": self.followers.analyzed().count(),
             "analyzed_percent": None,

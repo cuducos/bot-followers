@@ -7,7 +7,9 @@ from web.core.models import Account, Job
 
 class TestApiView(TestCase):
     def setUp(self):
-        self.job = mixer.blend(Job, screen_name="Borsalino")
+        self.job = mixer.blend(
+            Job, screen_name="Borsalino", image="https://borsalino.png"
+        )
         accounts = (
             mixer.blend(Account, botometer=0.62),
             mixer.blend(Account, botometer=0.99),
@@ -27,6 +29,7 @@ class TestApiView(TestCase):
         user, *_ = contents["data"]
         expected = {
             "twitter_account": str,
+            "image": str,
             "followers": int,
             "analyzed": int,
             "analyzed_percent": float,

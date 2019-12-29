@@ -27,6 +27,7 @@ def start(pk):
         return restart(job)
 
     job.total_followers = twitter.total_followers
+    job.image = twitter.image
     job.save()
 
     try:

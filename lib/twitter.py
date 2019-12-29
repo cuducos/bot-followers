@@ -16,6 +16,7 @@ class Twitter:
         # shortcuts
         self.screen_name = self.target.screen_name
         self.total_followers = self.target.followers_count
+        self.image = self.target.profile_image_url_https
 
     @property
     def followers(self):
