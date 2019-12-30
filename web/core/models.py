@@ -22,7 +22,7 @@ class Job(models.Model, JobSerializer):
 
     def percent_over(self, number, over_or_equal=True, wrapper=None):
         if not self.followers.analyzed().exists():
-            return None, None
+            return ''
 
         equal = "e" if over_or_equal else ""
         kwargs = {f"botometer__gt{equal}": number}
