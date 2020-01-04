@@ -18,7 +18,12 @@ def humanized_percent(number, decimals=2):
 
 
 def report(percent, error):
-    return cell(humanized_percent(percent), f"±{humanized_percent(error)}")
+
+    humanized_error = humanized_percent(error)
+    if error != None:
+        humanized_error = "±" + humanized_error
+
+    return cell(humanized_percent(percent), humanized_error)
 
 
 class JobModelAdmin(admin.ModelAdmin):
