@@ -21,18 +21,20 @@ class Job(models.Model, JobSerializer):
     objects = JobQuerySet.as_manager()
 
     def percent_over(self, number, over_or_equal=True, wrapper=None):
-        if not self.followers.analyzed().exists():
-            percent = None
-            error = None
-        else:
-            equal = "e" if over_or_equal else ""
-            kwargs = {f"botometer__gt{equal}": number}
-            match_count = self.followers.analyzed().filter(**kwargs).count()
+        if not wrapper:
+            wrapper = lambda percent, error: (percent, error)  # dumb wrapper
 
-            total = self.followers.analyzed().count()
-            percent = match_count / total
-            error = settings.Z_SCORE * sqrt(percent * (1 - percent) / total)
-        return wrapper(percent, error) if wrapper else (percent, error)
+        if not self.followers.analyzed().exists():
+            return wrapper(None, None)
+
+        equal = "e" if over_or_equal else ""
+        kwargs = {f"botometer__gt{equal}": number}
+        match_count = self.followers.analyzed().filter(**kwargs).count()
+
+        total = self.followers.analyzed().count()
+        percent = match_count / total
+        error = settings.Z_SCORE * sqrt(percent * (1 - percent) / total)
+        return wrapper(percent, error)
 
     def save_task(self, task_id):
         self.celery_task_id = task_id
