@@ -18,11 +18,7 @@ def humanized_percent(number, decimals=2):
 
 
 def report(percent, error):
-
-    humanized_error = humanized_percent(error)
-    if error != None:
-        humanized_error = "±" + humanized_error
-
+    humanized_error = "" if error is None else f"±{humanized_percent(error)}"
     return cell(humanized_percent(percent), humanized_error)
 
 
