@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from string import ascii_letters, digits
-from typing import Iterable, Iterator, Optional
+from typing import Iterable, Iterator, Mapping, Optional
 from random import randint
 
 from typer import confirm, echo, prompt, run
@@ -14,7 +14,7 @@ class Config:
     name: str
     default: Optional[str] = None
 
-    def value(self, use_default: bool = False):
+    def __call__(self, use_default: bool = False) -> str:
         if self.default and use_default:
             return self.default
 
@@ -22,27 +22,37 @@ class Config:
 
 
 @dataclass
+class AutoConfig:
+    """Config generated within a Group, using other Config values"""
+
+    name: str
+    value: str
+    arguments: Iterable[str]  # other varibles to pass as arguments to format
+
+    def __call__(self, settings: Mapping[str, str]) -> Mapping[str, str]:
+        value = self.value.format(settings[key] for key in self.arguments)
+        return {self.name: value}
+
+
+@dataclass
 class Group:
     title: str
     description: str
     configs: Iterable[Config]
-    auto_variable: Optional[Iterable[str]] = None
+    auto_config: Optional[AutoConfig] = None
 
     def __str__(self):
         contents = ("", self.title, f"({self.description})")
         return "\n".join(contents)
 
-    def contents(self, use_defaults: bool = False) -> Iterator[str]:
-        settings = {config.name: config.value(use_defaults) for config in self.configs}
+    def __call__(self, use_defaults: bool = False) -> Mapping[str, str]:
+        settings = {config.name: config(use_defaults) for config in self.configs}
 
-        if self.auto_variable:
-            name, value, *keys = self.auto_variable
-            replacements = tuple(settings[key] for key in keys)
-            value = value.format(*replacements)
-            settings[name] = value
+        if self.auto_config:
+            auto_settings = self.auto_config(settings)
+            settings.update(auto_settings)
 
-        for key, value in settings.items():
-            yield f"{key}={value}"
+        return settings
 
 
 @dataclass
@@ -94,13 +104,10 @@ class Generator:
                 Config("User name", "POSTGRES_USER", "borsalino"),
                 Config("Password", "POSTGRES_PASSWORD", "ehmelhorjair"),
             ),
-            (
+            AutoConfig(
                 "DATABASE_URL",
                 "postgres://{}:{}@{}/{}",
-                "POSTGRES_USER",
-                "POSTGRES_PASSWORD",
-                "POSTGRES_HOST",
-                "POSTGRES_DB",
+                ("POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_HOST", "POSTGRES_DB"),
             ),
         )
         celery = Group(
@@ -140,16 +147,19 @@ class Generator:
             if not self.use_defaults or not all(c.default for c in group.configs):
                 echo(group)
 
+            settings = group(self.use_defaults)
             yield f"# {group.title}"
-            yield from group.contents(self.use_defaults)
+            yield from (f"{key}={value}" for key, value in settings.items())
             yield ""
+
+    def __str__(self) -> str:
+        return "\n".join(self.contents())
 
     def __call__(self) -> None:
         if not self.can_write_to_path():
             return
 
-        contents = "\n".join(self.contents())
-        self.path.write_text(contents.strip())
+        self.path.write_text(str(self))
         echo(f"{self.path.name} created!")
 
 
