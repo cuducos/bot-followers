@@ -76,7 +76,11 @@ class Generator:
             "Django settings",
             "You can find details about them at https://docs.djangoproject.com/3.0/en/topics/settings/",
             (
-                Config("Debug mode", "DEBUG", "False"),
+                Config(
+                    "Debug mode (use True if in a development environment)",
+                    "DEBUG",
+                    "False",
+                ),
                 Config("Allowed hosts", "ALLOWED_HOSTS", "127.0.0.1,localhost"),
                 Config("Secret key", "SECRET_KEY", self.secret_key),
             ),

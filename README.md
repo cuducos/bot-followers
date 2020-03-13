@@ -18,8 +18,7 @@ If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/
 
 ### Development environment
 
-
-To start the services use the default `docker-compose up`.
+To start the services use the default `docker-compose up`. To prevent errors in the development environment, make sure the you have `DEBUG=True` in your `.env` file.
 
 ### Deploy environment
 
