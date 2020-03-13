@@ -10,10 +10,10 @@ If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/
 ## Installing
 
 1. Make sure you meet these requirements:
-  1. [Twitter API keys](https://developer.twitter.com/apps)
-  1. [Botometer API key](https://market.mashape.com/OSoMe/botometer)
-  1. **For development**, [Docker Compose](https://docs.docker.com/compose/)
-  1. **For production**, [Dokku](http://dokku.viewdocs.io/dokku/)
+    1. [Twitter API keys](https://developer.twitter.com/apps)
+    1. [Botometer API key](https://market.mashape.com/OSoMe/botometer)
+    1. **For development**, [Docker Compose](https://docs.docker.com/compose/)
+    1. **For production**, [Dokku](http://dokku.viewdocs.io/dokku/)
 1. Run `python env.py` to create a `.env` file with the required environment variables. Feel free to explore the options available with the `--help` argument.
 
 ### Development environment
@@ -25,9 +25,9 @@ To start the services use the default `docker-compose up`. To prevent errors in 
 Having a Dokku-ready server:
 
 1. Install the following Dokku plug-ins:
-  1. [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
-  1. [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
-  1. [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
+    1. [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
+    1. [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
+    1. [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
 1. Create an app for _Bot Followers_ in Dokku, add it as a remote repository in your local Git repository, and activate the plug-ins.
 1. For each variable in `.env`, create an equivalent environment variable for your Dokku app.
 
