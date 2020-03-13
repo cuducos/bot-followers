@@ -19,7 +19,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -U black
+        python -m pip install --upgrade pipenv
+        pipenv install --dev
 
     - name: Run Mypy static type checker
-      run: mypy env.py
+      run: pipenv run mypy env.py
