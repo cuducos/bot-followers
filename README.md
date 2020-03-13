@@ -1,4 +1,4 @@
-# Bot Followers [![GitHub Actions: Tests](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
+# Bot Followers [![GitHub Actions: Tests](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]() [![GitHub Actions: Mypy](https://github.com/cuducos/bot-followers/workflows/Mypy/badge.svg)]()
 
 A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
@@ -7,30 +7,30 @@ Clean-up](https://github.com/cuducos/twitter-cleanup).
 
 If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/bot-followers/tree/cli).
 
-## Requirements
+## Installing
 
-* [Twitter API keys](https://developer.twitter.com/apps)
-* [Botometer API key](https://market.mashape.com/OSoMe/botometer)
-* [Docker Compose](https://docs.docker.com/compose/) for the **development** mode instructions
-* [Dokku](http://dokku.viewdocs.io/dokku/) for the **production** mode (deploy) instructions
+1. Make sure you meet these requirements:
+  1. [Twitter API keys](https://developer.twitter.com/apps)
+  1. [Botometer API key](https://market.mashape.com/OSoMe/botometer)
+  1. **For development**, [Docker Compose](https://docs.docker.com/compose/)
+  1. **For production**, [Dokku](http://dokku.viewdocs.io/dokku/)
+1. Run `python env.py` to create a `.env` file with the required environment variables. Feel free to explore the options available with the `--help` argument.
 
-## Development setup
+### Development environment
 
-Copy `.env.sample` as `.env` and fill the environment values as appropriated. I tried to use meaningful variables names, but fell free to [ask](https://github.com/cuducos/bot-followers/issues) if anything is not clear.
 
 To start the services use the default `docker-compose up`.
 
-## Deploy setup
+### Deploy environment
 
-Having a Dokku-ready server, install the following Dokku plug-ins:
+Having a Dokku-ready server:
 
-* [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
-* [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
-* [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
-
-Create an app for Bot Followers in Dokku, add it as a remote repository in your local Git repository, and activate the plug-ins.
-
-For each variable in `.env.sample`, create an equivalent environment variable for your Dokku app.
+1. Install the following Dokku plug-ins:
+  1. [PostgreSQL](https://github.com/dokku/dokku-postgres-plugin) (or other database of your choice)
+  1. [RabbitMQ](https://github.com/dokku/dokku-rabbitmq-plugin) (or other Celery broker of your choice)
+  1. [Let's Encrypt](https://github.com/dokku/dokku-letsencrypt)
+1. Create an app for _Bot Followers_ in Dokku, add it as a remote repository in your local Git repository, and activate the plug-ins.
+1. For each variable in `.env`, create an equivalent environment variable for your Dokku app.
 
 ## Usage
 
@@ -79,9 +79,10 @@ $ python manage.py purgecelerytasks
 
 ## Contributing
 
-Please, write and run tests, and format your code with [Black](https://github.com/ambv/black):
+Please, write tests, run checks, and format your code with [Black](https://github.com/ambv/black):
 
 ```bash
-$ black .
 $ python manage.py test
+$ mypy env.py
+$ black .
 ```

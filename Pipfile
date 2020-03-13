@@ -8,12 +8,12 @@ flower = "*"
 ipdb = "*"
 isort = "*"
 ipython = "*"
+mypy = "*"
 
 [packages]
 arrow = "*"
 botometer = "*"
 celery = "*"
-click = "*"
 dj-database-url = "*"
 django = "*"
 django-cors-headers = "*"
@@ -27,7 +27,8 @@ psycopg2-binary = "*"
 python-decouple = "*"
 tqdm = "*"
 tweepy = "*"
-whitenoise = {extras = ["brotli"],version = "*"}
+typer = {extras = ["click-completion"], version = "*"}
+whitenoise = {extras = ["brotli"], version = "*"}
 
 [requires]
 python_version = "3.8"
