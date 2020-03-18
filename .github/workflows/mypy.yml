@@ -23,4 +23,4 @@ jobs:
         pipenv install --dev
 
     - name: Run Mypy static type checker
-      run: pipenv run mypy env.py
+      run: pipenv run mypy

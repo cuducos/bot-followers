@@ -14,7 +14,9 @@ If you're looking for the CLI version, [it's tagged](https://github.com/cuducos/
     1. [Botometer API key](https://market.mashape.com/OSoMe/botometer)
     1. **For development**, [Docker Compose](https://docs.docker.com/compose/)
     1. **For production**, [Dokku](http://dokku.viewdocs.io/dokku/)
-1. Run `python env.py` to create a `.env` file with the required environment variables. Feel free to explore the options available with the `--help` argument.
+1. Set up your local configuration variables; you can:
+    * run [Createnv](https://github.com/cuducos/createnv),
+    * or manually copy `.env.sample` as `.env` editing it accordingly.
 
 ### Development environment
 
@@ -82,6 +84,5 @@ Please, write tests, run checks, and format your code with [Black](https://githu
 
 ```bash
 $ python manage.py test
-$ mypy env.py
 $ black .
 ```
