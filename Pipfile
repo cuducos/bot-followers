@@ -9,7 +9,6 @@ flower = "*"
 ipdb = "*"
 isort = "*"
 ipython = "*"
-mypy = "*"
 
 [packages]
 arrow = "*"
@@ -28,8 +27,8 @@ psycopg2-binary = "*"
 python-decouple = "*"
 tqdm = "*"
 tweepy = "*"
-typer = {extras = ["click-completion"], version = "*"}
-whitenoise = {extras = ["brotli"], version = "*"}
+typer = {extras = ["click-completion"],version = "*"}
+whitenoise = {extras = ["brotli"],version = "*"}
 
 [requires]
 python_version = "3.8"

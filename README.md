@@ -1,4 +1,4 @@
-# Bot Followers [![GitHub Actions: Tests](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]() [![GitHub Actions: Mypy](https://github.com/cuducos/bot-followers/workflows/Mypy/badge.svg)]()
+# Bot Followers [![GitHub Actions: Tests](https://github.com/cuducos/bot-followers/workflows/Tests/badge.svg)]() [![GitHub Actions: Black](https://github.com/cuducos/bot-followers/workflows/Black/badge.svg)]()
 
 A web app to check whether followers of a given Twitter account are bots using [Botometer](https://botometer.iuni.iu.edu/). This repository started as a _fork_ of [Twitter
 Clean-up](https://github.com/cuducos/twitter-cleanup).
